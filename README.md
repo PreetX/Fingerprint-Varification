@@ -1,1 +1,1 @@
-# Fingerprint-Varification
+# Fingerprint-Verification
