@@ -1,2 +1,4 @@
-Real/
+dataset/
 __pycache__/
+Real/
+.gitignore
