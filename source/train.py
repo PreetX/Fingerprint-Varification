@@ -127,29 +127,28 @@ def main(args):
         return
 
     # prepare data
-    while True:
-        print('Prepare Dataset...')
-        train_data_pre = Prepare_Data(image_width, image_height, dataset_path)
-        img_data, label_data = train_data_pre.prepare_train_data()
-        print('Finished: ', img_data.shape, label_data.shape)
+    print('Prepare Dataset...')
+    train_data_pre = Prepare_Data(image_width, image_height, dataset_path)
+    img_data, label_data = train_data_pre.prepare_train_data()
+    print('Finished: ', img_data.shape, label_data.shape)
 
-        # split data
-        print('Split Dataset for train and validation...')
-        img_train, img_val, label_train, label_val = train_test_split(img_data, label_data, test_size = 0.1)
-        print('Finished: ')
-        print(img_train.shape, label_train.shape)
-        print(img_val.shape, label_val.shape)
+    # split data
+    print('Split Dataset for train and validation...')
+    img_train, img_val, label_train, label_val = train_test_split(img_data, label_data, test_size = 0.1)
+    print('Finished: ')
+    print(img_train.shape, label_train.shape)
+    print(img_val.shape, label_val.shape)
 
-        # prepare data generator
-        train_gen = DataGenerator(img_train, label_train, image_width, image_height, shuffle = True)
-        val_gen = DataGenerator(img_val, label_val, image_width, image_height, shuffle = True)
+    # prepare data generator
+    train_gen = DataGenerator(img_train, label_train, image_width, image_height, shuffle = True)
+    val_gen = DataGenerator(img_val, label_val, image_width, image_height, shuffle = True)
 
-        # training model
-        model.fit(train_gen, epochs = train_epoch, validation_data = val_gen, callbacks = [cp_callback])
+    # training model
+    model.fit(train_gen, epochs = train_epoch, validation_data = val_gen, callbacks = [cp_callback])
 
-        # save model
-        model_path = save_model_path + 'fp' + str(image_width) + '_' + str(image_height) + '.h5'
-        model.save(model_path)
+    # save model
+    model_path = save_model_path + 'fp' + str(image_width) + '_' + str(image_height) + '.h5'
+    model.save(model_path)
 
 
 # argument parser

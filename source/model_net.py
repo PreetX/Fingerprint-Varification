@@ -7,101 +7,99 @@ from tensorflow.keras import layers
 from tensorflow.keras import optimizers
 from tensorflow.keras.models import Model
 
-
 # model network class
 class Model_Net:
     def __init__(self, img_width, img_height) -> None:
         self.img_width = img_width
         self.img_height = img_height
 
-    # model definition
-    def feature_net(self, inputs):
         # Convolutional layers.
-        conv_1 = keras.layers.Conv2D(filters=32,
+        self.conv_1 = keras.layers.Conv2D(filters=32,
                                     kernel_size=(3, 3),
                                     activation='relu')
-        conv_2 = keras.layers.Conv2D(filters=64,
-                                    kernel_size=(3, 3),
-                                    strides=(1, 1),
-                                    padding='valid',
-                                    activation='relu')
-        conv_3 = keras.layers.Conv2D(filters=64,
+        self.conv_2 = keras.layers.Conv2D(filters=64,
                                     kernel_size=(3, 3),
                                     strides=(1, 1),
                                     padding='valid',
                                     activation='relu')
-        conv_4 = keras.layers.Conv2D(filters=64,
+        self.conv_3 = keras.layers.Conv2D(filters=64,
                                     kernel_size=(3, 3),
                                     strides=(1, 1),
                                     padding='valid',
                                     activation='relu')
-        conv_5 = keras.layers.Conv2D(filters=64,
+        self.conv_4 = keras.layers.Conv2D(filters=64,
+                                    kernel_size=(3, 3),
+                                    strides=(1, 1),
+                                    padding='valid',
+                                    activation='relu')
+        self.conv_5 = keras.layers.Conv2D(filters=64,
                                     kernel_size=[3, 3],
                                     strides=(1, 1),
                                     padding='valid',
                                     activation='relu')
-        conv_6 = keras.layers.Conv2D(filters=128,
+        self.conv_6 = keras.layers.Conv2D(filters=128,
                                     kernel_size=(3, 3),
                                     strides=(1, 1),
                                     padding='valid',
                                     activation='relu')
-        conv_7 = keras.layers.Conv2D(filters=128,
+        self.conv_7 = keras.layers.Conv2D(filters=128,
                                     kernel_size=[3, 3],
                                     strides=(1, 1),
                                     padding='valid',
                                     activation='relu')
 
         # Pooling layers.
-        pool_1 = keras.layers.MaxPool2D(pool_size=(2, 2),
+        self.pool_1 = keras.layers.MaxPool2D(pool_size=(2, 2),
                                         strides=(2, 2),
                                         padding='valid')
-        pool_2 = keras.layers.MaxPool2D(pool_size=(2, 2),
+        self.pool_2 = keras.layers.MaxPool2D(pool_size=(2, 2),
                                         strides=(2, 2),
                                         padding='valid')
-        pool_3 = keras.layers.MaxPool2D(pool_size=(2, 2),
+        self.pool_3 = keras.layers.MaxPool2D(pool_size=(2, 2),
                                         strides=(2, 2),
                                         padding='valid')
-        pool_4 = keras.layers.MaxPool2D(pool_size=[2, 2],
+        self.pool_4 = keras.layers.MaxPool2D(pool_size=[2, 2],
                                         strides=(1, 1),
                                         padding='valid')
         
         # Batch norm layers
-        bn_1 = keras.layers.BatchNormalization()
-        bn_2 = keras.layers.BatchNormalization()
-        bn_3 = keras.layers.BatchNormalization()
-        bn_4 = keras.layers.BatchNormalization()
-        bn_5 = keras.layers.BatchNormalization()
-        bn_6 = keras.layers.BatchNormalization()
-        bn_7 = keras.layers.BatchNormalization()
+        self.bn_1 = keras.layers.BatchNormalization()
+        self.bn_2 = keras.layers.BatchNormalization()
+        self.bn_3 = keras.layers.BatchNormalization()
+        self.bn_4 = keras.layers.BatchNormalization()
+        self.bn_5 = keras.layers.BatchNormalization()
+        self.bn_6 = keras.layers.BatchNormalization()
+        self.bn_7 = keras.layers.BatchNormalization()
 
+    # model definition
+    def feature_net(self, inputs):
         # |== Layer 1 ==|
-        x = conv_1(inputs)
-        x = bn_1(x)
-        x = pool_1(x)
+        x = self.conv_1(inputs)
+        x = self.bn_1(x)
+        x = self.pool_1(x)
 
         # |== Layer 2 ==|
-        x = conv_2(x)
-        x = bn_2(x)
-        x = conv_3(x)
-        x = bn_3(x)
-        x = pool_2(x)
+        x = self.conv_2(x)
+        x = self.bn_2(x)
+        x = self.conv_3(x)
+        x = self.bn_3(x)
+        x = self.pool_2(x)
 
         # |== Layer 3 ==|
-        x = conv_4(x)
-        x = bn_4(x)
-        x = conv_5(x)
-        x = bn_5(x)
-        x = pool_3(x)
+        x = self.conv_4(x)
+        x = self.bn_4(x)
+        x = self.conv_5(x)
+        x = self.bn_5(x)
+        x = self.pool_3(x)
 
         # |== Layer 4 ==|
-        x = conv_6(x)
-        x = bn_6(x)
-        x = conv_7(x)
-        x = bn_7(x)
-        outputs = pool_4(x)
+        x = self.conv_6(x)
+        x = self.bn_6(x)
+        x = self.conv_7(x)
+        x = self.bn_7(x)
+        outputs = self.pool_4(x)
 
         return outputs
-
 
     def build_model(self):
         # Conv layers.
@@ -151,6 +149,9 @@ class Model_Net:
         model.summary()
 
         # compile
-        model.compile(loss = 'binary_crossentropy', optimizer = optimizers.RMSprop(lr=1e-4), metrics = ['acc'])
+        model.compile(loss = 'binary_crossentropy', optimizer = optimizers.Adam(lr=1e-4), metrics = ['acc'])
 
         return model
+
+    def call(self, input_tensor, training=False):
+        return self.feature_net(input_tensor)

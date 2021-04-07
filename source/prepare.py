@@ -10,7 +10,6 @@ from skimage import util, filters, morphology
 EXPAND_WIDTH = 230
 EXPAND_HEIGHT = 230
 
-
 # file name parser
 def parse_file_name(img_path):
     finger_id, _ = os.path.splitext(os.path.basename(img_path))
@@ -22,6 +21,26 @@ def parse_file_name2(img_path):
     finger_id, finger_index = finger_id.split('_')
     #print(finger_id, finger_index)
     return np.array([finger_id], dtype=np.uint16)
+
+def prepare_image(img_path, CropWidth, CropHeight):
+    # get fingerprint region
+    (crop_l, crop_t, crop_r, crop_b) = get_fp_region(img_path, CropWidth, CropHeight)
+
+    img = Image.open(img_path)
+
+    ExpWidth = EXPAND_WIDTH
+    ExpHeight = EXPAND_HEIGHT
+
+    # crop for process image
+    crop_x = (ExpWidth - CropWidth) / 2
+    crop_y = (ExpHeight - CropHeight) / 2
+    img = img.crop([crop_l, crop_t, crop_r, crop_b])
+
+    # single crop
+    img_c = img.crop([crop_x, crop_y, crop_x + CropWidth, crop_y + CropHeight])
+    img_arr = np.array(img_c).reshape(CropWidth, CropHeight, 1)
+
+    return img_arr
 
 # get fingerprint region for crop
 def get_fp_region(img_path, crop_width, crop_height):
