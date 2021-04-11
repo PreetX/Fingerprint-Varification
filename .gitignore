@@ -3,3 +3,7 @@ __pycache__/
 Real/
 .gitignore
 checkpoint/
+node_modules/
+FP/
+.vscode/
+package-lock.json
